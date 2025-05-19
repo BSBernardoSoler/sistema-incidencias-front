@@ -4,17 +4,19 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "../context/SidebarContext";
+import { GiArchiveRegister } from "react-icons/gi";
+import { MdAddAlert } from "react-icons/md";
+import { FaHistory } from "react-icons/fa";
+import { GiStairsGoal } from "react-icons/gi";
+import { MdRateReview } from "react-icons/md";
+
 import {
   BoxCubeIcon,
-  CalenderIcon,
   ChevronDownIcon,
   GridIcon,
   HorizontaLDots,
-  ListIcon,
-  PageIcon,
   PieChartIcon,
   PlugInIcon,
-  TableIcon,
   UserCircleIcon,
 } from "../icons/index";
 import SidebarWidget from "./SidebarWidget";
@@ -30,69 +32,41 @@ const navItems: NavItem[] = [
   {
     icon: <GridIcon />,
     name: "Dashboard",
-    subItems: [{ name: "Ecommerce", path: "/", pro: false }],
-  },
-  {
-    icon: <CalenderIcon />,
-    name: "Calendar",
-    path: "/calendar",
+    subItems: [{ name: "Panel de control", path: "/", pro: false }],
   },
   {
     icon: <UserCircleIcon />,
-    name: "User Profile",
-    path: "/profile",
+    name: "Usuarios",
+    path: "/usuarios",
   },
-
-  {
-    name: "Forms",
-    icon: <ListIcon />,
-    subItems: [{ name: "Form Elements", path: "/form-elements", pro: false }],
+   {
+    icon: <GiArchiveRegister size={24}/>,
+    name: "Registros",
+    path: "/registros",
   },
-  {
-    name: "Tables",
-    icon: <TableIcon />,
-    subItems: [{ name: "Basic Tables", path: "/basic-tables", pro: false }],
+   {
+    icon: <MdRateReview size={24}/>,
+    name: "Observaciones",
+    path: "/observaciones",
   },
-  {
-    name: "Pages",
-    icon: <PageIcon />,
-    subItems: [
-      { name: "Blank Page", path: "/blank", pro: false },
-      { name: "404 Error", path: "/error-404", pro: false },
-    ],
+    {
+    icon: <MdAddAlert size={24}/>,
+    name: "Alertas",
+    path: "/alertas",
   },
-];
-
-const othersItems: NavItem[] = [
-  {
-    icon: <PieChartIcon />,
-    name: "Charts",
-    subItems: [
-      { name: "Line Chart", path: "/line-chart", pro: false },
-      { name: "Bar Chart", path: "/bar-chart", pro: false },
-    ],
+    {
+    icon: <GiStairsGoal size={24}/>,
+    name: "Metas",
+    path: "/metas",
   },
-  {
-    icon: <BoxCubeIcon />,
-    name: "UI Elements",
-    subItems: [
-      { name: "Alerts", path: "/alerts", pro: false },
-      { name: "Avatar", path: "/avatars", pro: false },
-      { name: "Badge", path: "/badge", pro: false },
-      { name: "Buttons", path: "/buttons", pro: false },
-      { name: "Images", path: "/images", pro: false },
-      { name: "Videos", path: "/videos", pro: false },
-    ],
-  },
-  {
-    icon: <PlugInIcon />,
-    name: "Authentication",
-    subItems: [
-      { name: "Sign In", path: "/signin", pro: false },
-      { name: "Sign Up", path: "/signup", pro: false },
-    ],
+    {
+    icon: <FaHistory size={24}/>,
+    name: "Historial de cambios",
+    path: "/historialCambios",
   },
 ];
+
+
 
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
@@ -236,31 +210,6 @@ const AppSidebar: React.FC = () => {
   // const isActive = (path: string) => path === pathname;
    const isActive = useCallback((path: string) => path === pathname, [pathname]);
 
-  useEffect(() => {
-    // Check if the current path matches any submenu item
-    let submenuMatched = false;
-    ["main", "others"].forEach((menuType) => {
-      const items = menuType === "main" ? navItems : othersItems;
-      items.forEach((nav, index) => {
-        if (nav.subItems) {
-          nav.subItems.forEach((subItem) => {
-            if (isActive(subItem.path)) {
-              setOpenSubmenu({
-                type: menuType as "main" | "others",
-                index,
-              });
-              submenuMatched = true;
-            }
-          });
-        }
-      });
-    });
-
-    // If no submenu item matches, close the open submenu
-    if (!submenuMatched) {
-      setOpenSubmenu(null);
-    }
-  }, [pathname,isActive]);
 
   useEffect(() => {
     // Set the height of the submenu items when the submenu is opened
@@ -304,7 +253,7 @@ const AppSidebar: React.FC = () => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div
-        className={`py-8 flex  ${
+        className={`py-2 flex  ${
           !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
         }`}
       >
@@ -313,14 +262,16 @@ const AppSidebar: React.FC = () => {
             <>
               <Image
                 className="dark:hidden"
-                src="/images/logo/logo.svg"
+                style={{ filter: "brightness(0) saturate(100%) invert(24%) sepia(98%) saturate(7497%) hue-rotate(199deg) brightness(96%) contrast(101%)" }}
+                src="/images/logo/auth-logo.svg"
                 alt="Logo"
-                width={150}
-                height={40}
+                width={50}
+                height={50}
               />
               <Image
                 className="hidden dark:block"
-                src="/images/logo/logo-dark.svg"
+                style={{ filter: "brightness(0) saturate(100%) invert(24%) sepia(98%) saturate(7497%) hue-rotate(199deg) brightness(96%) contrast(101%)" }}
+                src="/images/logo/auth-logo.svg"
                 alt="Logo"
                 width={150}
                 height={40}
@@ -328,13 +279,19 @@ const AppSidebar: React.FC = () => {
             </>
           ) : (
             <Image
-              src="/images/logo/logo-icon.svg"
+              src="/images/logo/auth-logo.svg"
+              style={{ filter: "brightness(0) saturate(100%) invert(24%) sepia(98%) saturate(7497%) hue-rotate(199deg) brightness(96%) contrast(101%)" }}
               alt="Logo"
-              width={32}
-              height={32}
+              width={50}
+              height={50}
             />
           )}
         </Link>
+        {(isExpanded || isHovered || isMobileOpen) && (
+          <span className="ml-3 self-center text-lg font-semibold whitespace-nowrap">
+            Sistema de incidencias
+          </span>
+        )}
       </div>
       <div className="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar">
         <nav className="mb-6">
@@ -364,17 +321,12 @@ const AppSidebar: React.FC = () => {
                     : "justify-start"
                 }`}
               >
-                {isExpanded || isHovered || isMobileOpen ? (
-                  "Others"
-                ) : (
-                  <HorizontaLDots />
-                )}
+              
               </h2>
-              {renderMenuItems(othersItems, "others")}
+            
             </div>
           </div>
         </nav>
-        {isExpanded || isHovered || isMobileOpen ? <SidebarWidget /> : null}
       </div>
     </aside>
   );

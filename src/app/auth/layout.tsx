@@ -25,7 +25,7 @@ export default function AuthLayout({
                   <Image
                     width={231}
                     height={48}
-                    src="./images/logo/auth-logo.svg"
+                    src="/images/logo/auth-logo.svg"
                     alt="Logo"
                     style={{ filter: "brightness(0) saturate(100%) invert(24%) sepia(98%) saturate(7497%) hue-rotate(199deg) brightness(96%) contrast(101%)" }}
                   />
