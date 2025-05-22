@@ -15,6 +15,7 @@
     "@fullcalendar/list": "^6.1.15",
     "@fullcalendar/react": "^6.1.15",
     "@fullcalendar/timegrid": "^6.1.15",
+    "@headlessui/react": "^2.2.4",
     "@react-jvectormap/core": "^1.0.4",
     "@react-jvectormap/world": "^1.1.2",
     "@tailwindcss/forms": "^0.5.9",
@@ -34,6 +35,7 @@
     "react-dropzone": "^14.3.5",
     "react-hot-toast": "^2.5.2",
     "react-icons": "^5.5.0",
+    "styled-components": "^6.1.18",
     "swiper": "^11.2.0",
     "tailwind-merge": "^2.6.0"
   },
