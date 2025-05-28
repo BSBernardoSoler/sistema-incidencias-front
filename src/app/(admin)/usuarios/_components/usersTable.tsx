@@ -60,6 +60,12 @@ export default function TableUsers({ users, recarga, setRecarga }: TableUsersPro
                 >
                   Correo
                 </TableCell>
+                <TableCell
+                  isHeader
+                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                >
+                  Telefono
+                </TableCell>
                   <TableCell
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
@@ -113,6 +119,9 @@ export default function TableUsers({ users, recarga, setRecarga }: TableUsersPro
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                     {user.correo}
+                  </TableCell>
+                   <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+                    {user.telefono ? user.telefono : "No disponible"}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                     <SelectActions userId = {user.id} recarga={recarga} isActive={user.estado === 1} setRecarga={setRecarga} />  

@@ -11,6 +11,7 @@ export interface User {
   apellidos: string;
   dni: string;
   correo: string;
+  telefono?: string;
   estado: number;
   fecha_ingreso: string; // o Date, si vas a parsearla
   rol: Rol;

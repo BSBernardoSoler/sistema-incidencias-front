@@ -35,7 +35,7 @@ export default function CreateUserModal({
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [selectedRole, setSelectedRole] = useState<Option | null>(null);
-
+  const [telefono, setTelefono] = useState('');
   const options: Option[] = [
     { value: '1', label: 'digitador' },
     { value: '2', label: 'admin' },
@@ -62,6 +62,7 @@ export default function CreateUserModal({
       correo: email,
       estado: 1,
       password,
+      telefono,
       rol_id: Number(selectedRole.value),
     };
 
@@ -178,6 +179,16 @@ export default function CreateUserModal({
                 className="py-1.5 text-sm"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+              <div>
+              <Label>Telefono</Label>
+              <Input
+                type="text"
+                placeholder="Ingrese telefono"
+                className="py-1.5 text-sm"
+                value={telefono}
+                onChange={(e) => setTelefono(e.target.value)}
               />
             </div>
 
