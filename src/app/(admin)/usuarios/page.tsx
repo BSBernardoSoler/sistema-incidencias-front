@@ -15,18 +15,38 @@ export default function Usuarios() {
   const [createUserModalOpen, setCreateUserModalOpen] = useState<boolean>(false);
   const [recarga, setRecarga] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+    // Paginación
+    const [page, setPage] = useState(1);
+    const limit = 7; // Puedes ajustar este valor
+    const [totalPages, setTotalPages] = useState(1);
 
 useEffect(() => {
   async function getUser(){
     setLoading(true);
-    const res = await fetch('/api/usuarios');
+    const res = await fetch(`/api/usuarios?page=${page}&limit=${limit}`);
     const data = await res.json();
+    
     setUsers(data.data);
+
+    // Asumiendo que el API devuelve total como data.total
+      if (data.total) {
+        setTotalPages(Math.ceil(data.total / limit));
+      }
+
     setLoading(false);
   }
   getUser();
 
-}, [recarga]);
+}, [recarga,page]);
+
+
+  const handleNext = () => {
+    if (page < totalPages) setPage((prev) => prev + 1);
+  };
+
+  const handlePrev = () => {
+    if (page > 1) setPage((prev) => prev - 1);
+  };
   
   if (loading) {
     return (
@@ -53,6 +73,23 @@ useEffect(() => {
             </Button>
           </div>
           <TableUsers users={users} recarga={recarga} setRecarga={setRecarga} />
+               <div className="flex justify-center items-center gap-4 mt-4">
+              <button
+                onClick={handlePrev}
+                disabled={page === 1}
+                className="px-3 py-1 bg-gray-300 rounded disabled:opacity-50"
+              >
+                Anterior
+              </button>
+              <span>Página {page} de {totalPages}</span>
+              <button
+                onClick={handleNext}
+                disabled={page === totalPages}
+                className="px-3 py-1 bg-gray-300 rounded disabled:opacity-50"
+              >
+                Siguiente
+              </button>
+            </div>
         </ComponentCard>
       </div>
     </div>

@@ -3,9 +3,13 @@ import { envs } from '@/config/envs';
 import { fetchWithAuth } from '../../../utils/fetchFunction';
 import { NextResponse } from 'next/server';
 
-export async function GET() {
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const page = searchParams.get('page') || '1'; // Default to page 1 if not provided
+  const limit = searchParams.get('limit') || '7'; // Default to 10 items per page if not provided
+
   const res = await fetchWithAuth(
-    `${envs.backend}/usuarios`,
+    `${envs.backend}/usuarios?page=${page}&limit=${limit}`,
     { method: 'GET' }
   );
 

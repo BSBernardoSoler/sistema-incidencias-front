@@ -7,25 +7,51 @@ import React, { useEffect, useState } from 'react'
 import TableMetas from './_components/metasTable'
 import { Meta } from '@/types/interfaces'
 import Loader from '@/components/common/loader'
+import CreateMetasModal from './_components/MetasCreateModal'
 
 export default function Metas() {
-    const [metas, setMetas] = useState<Meta[]>([]);
-  const [createMetaModalOpen, setCreateMetaModalOpen] = useState<boolean>(false);
-  const [recarga, setRecarga] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [metas, setMetas] = useState<Meta[]>([]);
+  const [createMetaModalOpen, setCreateMetaModalOpen] = useState(false);
+  const [recarga, setRecarga] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-useEffect(() => {
-  async function getMetas(){
-    setLoading(true);
-    const res = await fetch('/api/metas');
-    const data = await res.json();
-    setMetas(data.data);
-    setLoading(false);
-  }
-  getMetas();
+  // Paginación
+  const [page, setPage] = useState(1);
+  const limit = 7; // Puedes ajustar este valor
+  const [totalPages, setTotalPages] = useState(1);
 
-}, [recarga]);
-  
+  useEffect(() => {
+    async function getMetas() {
+      setLoading(true);
+      const res = await fetch(`/api/metas?page=${page}&limit=${limit}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await res.json();
+      setMetas(data.data);
+
+      // Asumiendo que el API devuelve total como data.total
+      if (data.total) {
+        setTotalPages(Math.ceil(data.total / limit));
+      }
+
+      setLoading(false);
+    }
+
+    getMetas();
+  }, [recarga, page]);
+
+  const handleNext = () => {
+    if (page < totalPages) setPage((prev) => prev + 1);
+  };
+
+  const handlePrev = () => {
+    if (page > 1) setPage((prev) => prev - 1);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -33,27 +59,52 @@ useEffect(() => {
       </div>
     );
   }
-  return (
-      <VerificadorSesion rolesPermitidos={['admin']}> 
-    <div>
-      <PageBreadcrumb pageTitle="Metas" />
 
-      <div className="space-y-6">
-        <ComponentCard title="Metas">
-          {/* <CreateHistorialModal historial={historial} isOpen={createHistorialModalOpen} recarga={recarga} setRecarga={setRecarga} onClose={() => setCreateHistorialModalOpen(false)} /> */}
-          <div className="flex justify-between items-center mb-4">
-           {/* <SearchComponent historial={historial} setHistorial={setHistorial} /> */}
-            <Button
-              onClick={() => setCreateMetaModalOpen(true)}
-              className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
-            >
-              Registrar Meta
-            </Button>
-          </div>
-          <TableMetas metas={metas} recarga={recarga} setRecarga={setRecarga} />
-        </ComponentCard>
+  return (
+    <VerificadorSesion rolesPermitidos={['admin']}>
+      <div>
+        <PageBreadcrumb pageTitle="Metas" />
+        <div className="space-y-6">
+          <CreateMetasModal
+            metas={metas}
+            isOpen={createMetaModalOpen}
+            onClose={() => setCreateMetaModalOpen(false)}
+            recarga={recarga}
+            setRecarga={setRecarga}
+          />
+          <ComponentCard title="Metas">
+            <div className="flex justify-between items-center mb-4">
+              <Button
+                onClick={() => setCreateMetaModalOpen(true)}
+                className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
+              >
+                Registrar Meta
+              </Button>
+            </div>
+
+            <TableMetas metas={metas} recarga={recarga} setRecarga={setRecarga} />
+
+            {/* Controles de paginación */}
+            <div className="flex justify-center items-center gap-4 mt-4">
+              <button
+                onClick={handlePrev}
+                disabled={page === 1}
+                className="px-3 py-1 bg-gray-300 rounded disabled:opacity-50"
+              >
+                Anterior
+              </button>
+              <span>Página {page} de {totalPages}</span>
+              <button
+                onClick={handleNext}
+                disabled={page === totalPages}
+                className="px-3 py-1 bg-gray-300 rounded disabled:opacity-50"
+              >
+                Siguiente
+              </button>
+            </div>
+          </ComponentCard>
+        </div>
       </div>
-    </div>
     </VerificadorSesion>
-  )
+  );
 }

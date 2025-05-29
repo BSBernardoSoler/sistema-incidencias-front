@@ -19,6 +19,8 @@ export interface User {
 
 
 
+
+
 export interface Registro {
   id: number;
   fecha_digitacion: string; // o Date, si vas a parsearla
@@ -58,6 +60,7 @@ export interface Meta {
   meta_mensual: number;
   fecha_registro: string; // o Date, si vas a parsearla
   estado: number;
+  usuario: Omit<User, 'rol'>;
 }
 
 

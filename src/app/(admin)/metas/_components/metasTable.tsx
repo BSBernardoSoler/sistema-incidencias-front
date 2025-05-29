@@ -34,6 +34,18 @@ export default function TableMetas({ metas, recarga, setRecarga }: TableMetasPro
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                 >
+                  Usuario
+                </TableCell>
+                <TableCell
+                  isHeader
+                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                >
+                  Dni
+                </TableCell>
+                <TableCell
+                  isHeader
+                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                >
                   Mes
                 </TableCell>
                 <TableCell
@@ -73,6 +85,12 @@ export default function TableMetas({ metas, recarga, setRecarga }: TableMetasPro
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
               {metas.map((meta) => (
                 <TableRow key={meta.id}>
+                    <TableCell className="px-5 py-4 sm:px-6 text-start">
+                    {meta.usuario.nombres}{" "}{meta.usuario.apellidos}
+                  </TableCell>
+                      <TableCell className="px-5 py-4 sm:px-6 text-start">
+                    {meta.usuario.dni}
+                  </TableCell>
                   <TableCell className="px-5 py-4 sm:px-6 text-start">
                     {meta.mes}
                   </TableCell>
