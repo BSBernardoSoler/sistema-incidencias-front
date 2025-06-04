@@ -53,8 +53,12 @@ export default function EditUserModal({
       toast.error('Todos los campos son obligatorios');
       return;
     }
+    let userData={
 
-    const userData = {
+    }
+
+   if(password){
+       userData = {
       nombres: firstName,
       apellidos: lastName,
       dni,
@@ -64,6 +68,17 @@ export default function EditUserModal({
       password,
       rol_id: Number(selectedRole?.value),
     };
+   }else{
+       userData = {
+      nombres: firstName,
+      apellidos: lastName,
+      dni,
+      correo: email,
+      telefono,
+      estado: 1,
+      rol_id: Number(selectedRole?.value),
+    };
+   }
 
     try {
       const response = await fetch(`/api/usuarios?id=${userEdit?.id }`, {

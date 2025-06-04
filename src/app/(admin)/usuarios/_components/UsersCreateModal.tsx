@@ -74,10 +74,10 @@ export default function CreateUserModal({
       });
      const data = await response.json();
       if (!response.ok){
-        toast.error('Error al crear usuario');
+        toast.error(data.message || 'Error al crear usuario');
       };
 
-      if (response.status === 201) {
+      if (response.status === 200) {
         toast.success('Usuario creado correctamente');
         setRecarga(!recarga);
         setFirstName('');
