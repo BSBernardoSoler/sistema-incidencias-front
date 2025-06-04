@@ -37,15 +37,15 @@ export async function POST(request: Request) {
       },
     }
   );
+  const data = await res.json();
 
   if (!res.ok) {
     return NextResponse.json(
-      { message: 'Error al crear usuario' },
+      { message: data.message || 'Error al crear usuario' },
       { status: 500 }
     );
   }
 
-  const data = await res.json();
   return NextResponse.json(data);
 }
 

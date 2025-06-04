@@ -59,6 +59,7 @@ export default function EditUserModal({
       apellidos: lastName,
       dni,
       correo: email,
+      telefono,
       estado: 1,
       password,
       rol_id: Number(selectedRole?.value),
@@ -72,7 +73,7 @@ export default function EditUserModal({
       });
       const data = await response.json();
       if (!response.ok) {
-                toast.error(data.message || 'Error al actualizar usuario');
+        toast.error(data.message || 'Error al actualizar usuario');
 
         
       }

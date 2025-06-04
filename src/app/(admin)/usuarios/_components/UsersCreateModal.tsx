@@ -72,18 +72,24 @@ export default function CreateUserModal({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userData),
       });
+     const data = await response.json();
+      if (!response.ok){
+        toast.error('Error al crear usuario');
+      };
 
-      if (!response.ok) throw new Error('Error creando usuario');
-
-      toast.success('Usuario creado correctamente');
-      setRecarga(!recarga);
-      setFirstName('');
-      setLastName('');
-      setDni('');
-      setEmail('');
-      setPassword('');
-      setSelectedRole(null);
-      onClose();
+      if (response.status === 201) {
+        toast.success('Usuario creado correctamente');
+        setRecarga(!recarga);
+        setFirstName('');
+        setLastName('');
+        setDni('');
+        setEmail('');
+        setPassword('');
+        setTelefono('');
+        setSelectedRole(null);
+        onClose();
+      
+      }
     } catch (error) {
       toast.error('Error al crear usuario');
       console.error('Error al crear usuario:', error);
