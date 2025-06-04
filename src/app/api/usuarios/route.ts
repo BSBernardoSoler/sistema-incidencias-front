@@ -55,8 +55,9 @@ export async function PATCH(request: Request) {
      const { searchParams } = new URL(request.url);
      const id = searchParams.get('id');
      const body = await request.json();
+     
      const res = await fetchWithAuth(
-        `${envs.backend}/usuarios/id${id}`,
+        `${envs.backend}/usuarios/${id}`,
         {
         method: 'PATCH',
         body: JSON.stringify(body),
@@ -65,15 +66,15 @@ export async function PATCH(request: Request) {
         },
         }
     );
-    
+    const data = await res.json();
+
     if (!res.ok) {
         return NextResponse.json(
-        { message: 'Error al actualizar usuario' },
+        { message: data.message || 'Error al actualizar usuario' },
         { status: 500 }
         );
     }
     
-    const data = await res.json();
     return NextResponse.json(data);
 
 }

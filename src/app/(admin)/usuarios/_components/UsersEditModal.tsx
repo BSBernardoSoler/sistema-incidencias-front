@@ -9,7 +9,7 @@ import toast from 'react-hot-toast';
 import Button from '@/components/ui/button/Button';
 
 interface CreateUserModalProps {
-  users: User[];
+  userEdit: User | null;
   isOpen: boolean;
   onClose: () => void;
   recarga: boolean;
@@ -22,34 +22,33 @@ interface Option {
 }
 
 export default function EditUserModal({
-  users,
+  userEdit,
   isOpen,
   onClose,
   recarga,
   setRecarga,
 }: CreateUserModalProps) {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [dni, setDni] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [selectedRole, setSelectedRole] = useState<Option | null>(null);
-
-  const options: Option[] = [
-    { value: '1', label: 'digitador' },
-    { value: '2', label: 'admin' },
-    { value: '3', label: 'doctor' },
-  ];
+ const [firstName, setFirstName] = useState(userEdit ? userEdit.nombres : '');
+   const [lastName, setLastName] = useState(userEdit ? userEdit.apellidos : '');
+   const [dni, setDni] = useState(userEdit ? userEdit.dni : '');
+   const [email, setEmail] = useState(userEdit ? userEdit.correo : '');
+   const [password, setPassword] = useState('');
+   const [showPassword, setShowPassword] = useState(false);
+   const [selectedRole, setSelectedRole] = useState<Option | null>(null);
+   const [telefono, setTelefono] = useState(userEdit ? userEdit.telefono : '');
+   const options: Option[] = [
+     { value: '1', label: 'digitador' },
+     { value: '2', label: 'admin' },
+     { value: '3', label: 'doctor' },
+   ];
+ 
 
   const createUser = async () => {
     if (
       !firstName.trim() ||
       !lastName.trim() ||
       !dni.trim() ||
-      !email.trim() ||
-      !password.trim() ||
-      !selectedRole
+      !email.trim() 
     ) {
       toast.error('Todos los campos son obligatorios');
       return;
@@ -62,19 +61,23 @@ export default function EditUserModal({
       correo: email,
       estado: 1,
       password,
-      rol_id: Number(selectedRole.value),
+      rol_id: Number(selectedRole?.value),
     };
 
     try {
-      const response = await fetch('/api/usuarios', {
-        method: 'POST',
+      const response = await fetch(`/api/usuarios?id=${userEdit?.id }`, {
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userData),
       });
+      const data = await response.json();
+      if (!response.ok) {
+                toast.error(data.message || 'Error al actualizar usuario');
 
-      if (!response.ok) throw new Error('Error creando usuario');
-
-      toast.success('Usuario creado correctamente');
+        
+      }
+     if (response.status === 200) {
+       toast.success('Usuario actualizado correctamente');
       setRecarga(!recarga);
       setFirstName('');
       setLastName('');
@@ -83,9 +86,10 @@ export default function EditUserModal({
       setPassword('');
       setSelectedRole(null);
       onClose();
+     }
     } catch (error) {
-      toast.error('Error al crear usuario');
-      console.error('Error al crear usuario:', error);
+      toast.error('Error al actualizar usuario');
+      console.error('Error al actualizar usuario:', error);
     }
   };
 
@@ -93,6 +97,20 @@ export default function EditUserModal({
     const selected = options.find((option) => option.value === value) || null;
     setSelectedRole(selected);
   };
+
+  useEffect(() => {
+    if (userEdit) {
+      setFirstName(userEdit.nombres);
+      setLastName(userEdit.apellidos);
+      setDni(userEdit.dni);
+      setEmail(userEdit.correo);
+      setTelefono(userEdit.telefono || '');
+      setSelectedRole({
+        value: String(userEdit.rol.id),
+        label: userEdit.rol.nombre,
+      });
+    }
+  }, [userEdit]);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -112,7 +130,7 @@ export default function EditUserModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="w-full max-w-xl p-6 bg-white rounded-lg shadow-lg dark:bg-dark-900 max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">Crear Usuario</h2>
+          <h2 className="text-xl font-semibold">Editar Usuario</h2>
           <button
             onClick={onClose}
             className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
@@ -180,6 +198,16 @@ export default function EditUserModal({
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
+            <div>
+              <Label>Telefono</Label>
+              <Input
+                type="text"
+                placeholder="Ingrese telefono"
+                className="py-1.5 text-sm"
+                value={telefono}
+                onChange={(e) => setTelefono(e.target.value)}
+              />
+            </div>
 
             <div>
               <Label>Contraseña</Label>
@@ -216,7 +244,7 @@ export default function EditUserModal({
               className="px-4 py-1.5 text-sm text-white bg-blue-600 rounded-md hover:bg-blue-700"
               onClick={createUser}
             >
-              Crear Usuario
+              Guardar Usuario
             </Button>
           </div>
         </div>

@@ -9,12 +9,15 @@ import SearchComponent from './_components/searchComponent';
 import CreateUserModal from './_components/UsersCreateModal';
 import Button from '@/components/ui/button/Button';
 import Loader from '@/components/common/loader';
+import EditUserModal from './_components/UsersEditModal';
 
 export default function Usuarios() {
   const [users, setUsers] = useState<User[]>([]);
   const [createUserModalOpen, setCreateUserModalOpen] = useState<boolean>(false);
+  const [editUserModalOpen, setEditUserModalOpen] = useState<boolean>(false);
   const [recarga, setRecarga] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [userEdit, setUserEdit] = useState<User | null>(null);
     // Paginación
     const [page, setPage] = useState(1);
     const limit = 7; // Puedes ajustar este valor
@@ -63,6 +66,7 @@ useEffect(() => {
       <div className="space-y-6">
         <ComponentCard title="Usuarios">
           <CreateUserModal users={users} isOpen={createUserModalOpen} recarga={recarga} setRecarga={setRecarga} onClose={() => setCreateUserModalOpen(false)} />
+          <EditUserModal  isOpen={editUserModalOpen} recarga={recarga} setRecarga={setRecarga} onClose={() => setEditUserModalOpen(false)} userEdit={userEdit} />
           <div className="flex justify-between items-center mb-4">
             <SearchComponent users={users} setUsers={setUsers} />
             <Button
@@ -72,7 +76,7 @@ useEffect(() => {
               Crear Usuario
             </Button>
           </div>
-          <TableUsers users={users} recarga={recarga} setRecarga={setRecarga} />
+          <TableUsers users={users} recarga={recarga} setRecarga={setRecarga}  setEditUserModalOpen={setEditUserModalOpen} setUserEdit={setUserEdit} />
                <div className="flex justify-center items-center gap-4 mt-4">
               <button
                 onClick={handlePrev}

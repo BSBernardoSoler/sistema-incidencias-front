@@ -3,12 +3,17 @@ import React from "react";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { ChevronDownIcon } from "@/icons";
 import toast from "react-hot-toast";
+import { User } from "@/types/interfaces";
 
 interface SelectActionsProps {
   userId: number;
+  user:User
   recarga: boolean;
   setRecarga: React.Dispatch<React.SetStateAction<boolean>>;
   isActive: boolean;
+  setEditUserModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setUserEdit: React.Dispatch<React.SetStateAction<User | null>>;
+
 }
 
 export default function SelectActions({
@@ -16,6 +21,9 @@ export default function SelectActions({
   recarga,
   setRecarga,
   isActive,
+  setEditUserModalOpen,
+  user,
+  setUserEdit
 }: SelectActionsProps) {
   const handleAction = async (action: string) => {
     if (action === "Eliminar") {
@@ -25,7 +33,12 @@ export default function SelectActions({
         await deleteUser(userId);
       }
     } else if (action === "Editar") {
-      // Handle edit action here
+      if(user){
+        setUserEdit(user);
+        setEditUserModalOpen(true);
+      }else{
+        toast.error("No se pudo obtener el usuario para editar");
+      }
       console.log("Edit user with ID:", userId);
     }
   };
