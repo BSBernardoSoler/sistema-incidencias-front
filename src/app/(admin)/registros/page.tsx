@@ -8,6 +8,7 @@ import { Button } from '@headlessui/react';
 import React, { useEffect, useState } from 'react'
 import TableRegistros from './_components/registrosTable';
 import SearchComponent from './_components/searchComponet';
+import CreateRegistroModal from './_components/registrosCreateModal';
 
 export default function Registros() {
 
@@ -16,22 +17,41 @@ export default function Registros() {
   const [recarga, setRecarga] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
+    // Paginación
+    const [page, setPage] = useState(1);
+    const limit = 7; // Puedes ajustar este valor
+    const [totalPages, setTotalPages] = useState(1);
+
 useEffect(() => {
   async function getRegistros(){
     setLoading(true);
-    const res = await fetch('/api/registros',{
+    const res = await fetch(`/api/registros?page=${page}&limit=${limit}`,{
       method: 'GET',
      
     });
     const data = await res.json();
     const registros: RegistroDetalle[] = data.data;
-    console.log(registros);
+  
     setRegistros(registros);
+
+       // Asumiendo que el API devuelve total como data.total
+      if (data.total) {
+        setTotalPages(Math.ceil(data.total / limit));
+      }
     setLoading(false);
   }
   getRegistros();
 
-}, [recarga]);
+}, [recarga, page]);
+
+  const handleNext = () => {
+    if (page < totalPages) setPage((prev) => prev + 1);
+  };
+
+  const handlePrev = () => {
+    if (page > 1) setPage((prev) => prev - 1);
+  };
+
   
   if (loading) {
     return (
@@ -47,7 +67,7 @@ useEffect(() => {
 
       <div className="space-y-6">
         <ComponentCard title="Registros">
-          {/* <CreateHistorialModal historial={historial} isOpen={createHistorialModalOpen} recarga={recarga} setRecarga={setRecarga} onClose={() => setCreateHistorialModalOpen(false)} /> */}
+          <CreateRegistroModal isOpen={createRegistroModalOpen} recarga={recarga} setRecarga={setRecarga} onClose={() => setCreateRegistroModalOpen(false)} users={[]} />
           <div className="flex justify-between items-center mb-4">
             <SearchComponent registros={registros} setRegistros={setRegistros} />
             <Button
@@ -58,6 +78,24 @@ useEffect(() => {
             </Button>
           </div>
           <TableRegistros registros={registros} recarga={recarga} setRecarga={setRecarga} />
+            {/* Controles de paginación */}
+            <div className="flex justify-center items-center gap-4 mt-4">
+              <button
+                onClick={handlePrev}
+                disabled={page === 1}
+                className="px-3 py-1 bg-gray-300 rounded disabled:opacity-50"
+              >
+                Anterior
+              </button>
+              <span>Página {page} de {totalPages}</span>
+              <button
+                onClick={handleNext}
+                disabled={page === totalPages}
+                className="px-3 py-1 bg-gray-300 rounded disabled:opacity-50"
+              >
+                Siguiente
+              </button>
+            </div>
         </ComponentCard>
       </div>
     </div>

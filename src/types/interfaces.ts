@@ -18,6 +18,18 @@ export interface User {
 }
 
 
+export interface Usuario {
+  id: number;
+  nombres: string;
+  apellidos: string;
+  dni: string;
+  correo: string;
+  telefono: string;
+  estado: number;
+  fecha_ingreso: string;
+}
+
+
 
 
 

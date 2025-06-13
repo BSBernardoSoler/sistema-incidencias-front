@@ -2,9 +2,12 @@ import { envs } from "@/config/envs";
 import { fetchWithAuth } from "@/utils/fetchFunction";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET( request: Request) {
+  const newUrl = new URL(request.url);
+  const page = newUrl.searchParams.get('page') ;
+  const limit = newUrl.searchParams.get('limit') ; 
   const res = await fetchWithAuth(
-    `${envs.backend}/observaciones`,
+    `${envs.backend}/observaciones?page=${page}&limit=${limit}`,
     { method: 'GET' }
   );
 
