@@ -4,9 +4,10 @@ import Label from '../../../../components/form/Label';
 import Input from '../../../../components/form/input/InputField';
 import Select from '../../../../components/form/Select';
 import { ChevronDownIcon, EyeCloseIcon, EyeIcon } from '../../../../icons';
-import { Meta, User } from '@/types/interfaces';
+import { Meta, User, Usuario } from '@/types/interfaces';
 import toast from 'react-hot-toast';
 import Button from '@/components/ui/button/Button';
+import AsyncSelect from 'react-select/async';
 
 interface CreateMetasModalProps {
   metas: Meta[];
@@ -32,6 +33,61 @@ export default function CreateMetasModal({
   const [meta_diaria, setMetaDiaria] = useState('');
   const [meta_mensual, setMetaMensual] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+    const [selectedUsuario, setSelectedUsuario] = useState<Usuario | null>(null);
+  
+
+
+    // Función para cargar opciones  de clientes
+  const loadOptions = async (inputValue: string) => {
+    return await handleBuscarUsuario(inputValue);
+  };
+
+
+      // Función para buscar usuario por documento
+    const handleBuscarUsuario = async (documento: string) => {
+      if (documento.length >= 8 && documento.length <= 11) {
+        try {
+          const response = await fetch(
+            `/api/usuarios/show?dni=${documento}`,
+            {
+              method: "GET",
+            }
+          );
+          const data = await response.json();
+  
+          if (response.status === 200 && data && data.length > 0) {
+            const usuarios: Usuario[] = data;
+            const usuario = usuarios[0]; // Suponiendo que solo hay un usuario por documento
+            return [
+              {
+                value: usuario.id,
+                label: `${usuario.nombres} ${usuario.apellidos} Doc:${usuario.dni}`,
+                usuario, // Agregamos el objeto completo para referencia
+              },
+            ];
+          } else {
+            console.error(data.message);
+            //toast.error(data.mensaje);
+            return []; // Si no hay usuario, retorna un array vacío
+          }
+        } catch (error) {
+          //console.error("Error al buscar usuario:", error);
+          return []; // Manejo de errores
+        }
+      }
+      return []; // Retorna vacío si el documento no cumple con la longitud
+    };
+    // Manejar el cambio de selección de usuario
+  const handleChange = (selectedOption: any) => {
+    if (selectedOption) {
+
+      setSelectedUsuario(selectedOption.usuario);
+
+      console.log("Usuario seleccionado:", selectedOption.usuario);
+    } else {
+      setSelectedUsuario(null); // Limpia la selección
+    }
+  };
 
 
   const options: Option[] = [
@@ -60,7 +116,7 @@ export default function CreateMetasModal({
     }
 
     const userData = {
-      usuario_id: 1,
+      usuario_id: selectedUsuario?.id,
       mes: mes,
       meta_diaria: Number(meta_diaria),
       meta_mensual: Number(meta_mensual),
@@ -130,6 +186,34 @@ export default function CreateMetasModal({
         </div>
 
         <div className="space-y-4">
+             <div className="mt-1">
+              <label
+                htmlFor="invoice_entity_id"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Usuario
+              </label>
+              <div className="relative mt-1 flex items-center space-x-2">
+                <AsyncSelect
+                  cacheOptions
+                  loadOptions={loadOptions}
+                  onChange={handleChange}
+                  placeholder="Buscar cliente por documento..."
+                  isClearable
+                  className="flex-grow"
+                  value={
+                    selectedUsuario
+                      ? {
+                          value: selectedUsuario?.id,
+                          label: `${selectedUsuario?.nombres} ${selectedUsuario?.apellidos}`,
+                          usuario: selectedUsuario, // Agregamos el objeto completo para referencia
+                        }
+                      : ""
+                  }
+                />
+           
+              </div>
+            </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label>Meta Diaria </Label>

@@ -42,3 +42,63 @@ export async function POST(request: Request) {
   const data = await res.json();
   return NextResponse.json(data);
 }
+
+export async function DELETE(request: Request) {
+  const newUrl = new URL(request.url);
+  const metaId = newUrl.searchParams.get('id');
+
+  if (!metaId) {
+    return NextResponse.json(
+      { message: 'ID de meta no proporcionado' },
+      { status: 400 }
+    );
+  }
+
+  const res = await fetchWithAuth(
+    `${envs.backend}/metas/${metaId}`,
+    { method: 'DELETE' }
+  );
+
+  if (!res.ok) {
+    return NextResponse.json(
+      { message: 'Error al eliminar meta' },
+      { status: 500 }
+    );
+  }
+
+  return NextResponse.json({ message: 'Meta eliminada correctamente' });
+}
+
+
+export async function PUT(request: Request) {   
+  const body = await request.json();
+  const metaId = body.id;
+  delete body.id; // Eliminar el ID del cuerpo para no enviarlo al backend
+  if (!metaId) {
+    return NextResponse.json(
+      { message: 'ID de meta no proporcionado' },
+      { status: 400 }
+    );
+  }
+
+  const res = await fetchWithAuth(
+    `${envs.backend}/metas/${metaId}`,
+    {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+  const data = await res.json();
+
+  if (!res.ok) {
+    return NextResponse.json(
+      { message: data.message || 'Error al actualizar meta' },
+      { status: 500 }
+    );
+  }
+
+  return NextResponse.json(data);
+}

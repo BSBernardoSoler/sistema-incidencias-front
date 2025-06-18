@@ -3,12 +3,16 @@ import React from "react";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { ChevronDownIcon } from "@/icons";
 import toast from "react-hot-toast";
+import { Meta } from "@/types/interfaces";
 
 interface SelectActionsProps {
   metaId: number;
+  meta: Meta;
   recarga: boolean;
   setRecarga: React.Dispatch<React.SetStateAction<boolean>>;
   isActive: boolean;
+  setEditMetaModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedMetaEdit: React.Dispatch<React.SetStateAction<Meta | null>>;
 }
 
 export default function SelectActions({
@@ -16,33 +20,41 @@ export default function SelectActions({
   recarga,
   setRecarga,
   isActive,
+  setEditMetaModalOpen,
+  setSelectedMetaEdit,
+  meta,
 }: SelectActionsProps) {
   const handleAction = async (action: string) => {
     if (action === "Eliminar") {
       if (!isActive) {
         toast.error("No se puede eliminar una meta inactiva");
       } else {
-        await deleteUser(metaId);
+        await deleteMeta(metaId);
       }
     } else if (action === "Editar") {
-      // Handle edit action here
+      handleEdit(meta);
       console.log("Edit user with ID:", metaId);
     }
   };
 
-  const deleteUser = async (userId: number) => {
-    const res = await fetch(`/api/usuarios?id=${userId}`, {
+  const deleteMeta = async (metaId: number) => {
+    const res = await fetch(`/api/metas?id=${metaId}`, {
       method: "DELETE",
     });
 
     if (!res.ok) {
       const errorData = await res.json();
-      toast.error(errorData.message || "Error deleting user");
+      toast.error(errorData.message || "Error deleting meta");
       return;
     } else {
-      toast.success("User deleted successfully");
+      toast.success("Meta deleted successfully");
       setRecarga(!recarga);
     }
+  };
+
+  const handleEdit = (meta: Meta) => {
+    setSelectedMetaEdit(meta);
+    setEditMetaModalOpen(true);
   };
 
   return (

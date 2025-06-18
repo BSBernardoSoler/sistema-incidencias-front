@@ -18,10 +18,12 @@ import SelectActions from "./selectActions";
 interface TableMetasProps {
   metas: Meta[];
   recarga: boolean;
-  setRecarga: React.Dispatch<React.SetStateAction<boolean>>;    
+  setRecarga: React.Dispatch<React.SetStateAction<boolean>>;
+  setEditMetaModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedMetaEdit: React.Dispatch<React.SetStateAction<Meta | null>>;    
 }
 
-export default function TableMetas({ metas, recarga, setRecarga }: TableMetasProps) {
+export default function TableMetas({ metas, recarga, setRecarga, setEditMetaModalOpen, setSelectedMetaEdit }: TableMetasProps) {
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="max-w-full overflow-x-auto">
@@ -122,7 +124,7 @@ export default function TableMetas({ metas, recarga, setRecarga }: TableMetasPro
                     </Badge>
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                    <SelectActions metaId={meta.id} recarga={recarga} isActive={meta.estado === 1} setRecarga={setRecarga} />
+                    <SelectActions metaId={meta.id} recarga={recarga} isActive={meta.estado === 1} setRecarga={setRecarga} setEditMetaModalOpen={setEditMetaModalOpen} setSelectedMetaEdit={setSelectedMetaEdit} meta={meta} />
                   </TableCell>
                 </TableRow>
               ))}

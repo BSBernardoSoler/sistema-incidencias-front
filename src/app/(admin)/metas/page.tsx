@@ -8,10 +8,13 @@ import TableMetas from './_components/metasTable'
 import { Meta } from '@/types/interfaces'
 import Loader from '@/components/common/loader'
 import CreateMetasModal from './_components/MetasCreateModal'
+import MetasEditModal from './_components/MetasEditModal';
 
 export default function Metas() {
   const [metas, setMetas] = useState<Meta[]>([]);
   const [createMetaModalOpen, setCreateMetaModalOpen] = useState(false);
+  const [editMetaModalOpen, setEditMetaModalOpen] = useState(false);
+  const [selectedMetaEdit, setSelectedMetaEdit] = useState<Meta | null>(null);
   const [recarga, setRecarga] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -72,6 +75,17 @@ export default function Metas() {
             recarga={recarga}
             setRecarga={setRecarga}
           />
+          {selectedMetaEdit && (
+            <MetasEditModal
+              isOpen={editMetaModalOpen}
+              onClose={() => setEditMetaModalOpen(false)}
+              meta={selectedMetaEdit}
+              recarga={recarga}
+              setRecarga={setRecarga}
+            />
+          )}
+
+          {/* Tabla de Metas */}
           <ComponentCard title="Metas">
             <div className="flex justify-between items-center mb-4">
               <Button
@@ -82,7 +96,7 @@ export default function Metas() {
               </Button>
             </div>
 
-            <TableMetas metas={metas} recarga={recarga} setRecarga={setRecarga} />
+            <TableMetas metas={metas} recarga={recarga} setRecarga={setRecarga} setSelectedMetaEdit={setSelectedMetaEdit}  setEditMetaModalOpen={setEditMetaModalOpen} />
 
             {/* Controles de paginación */}
             <div className="flex justify-center items-center gap-4 mt-4">
