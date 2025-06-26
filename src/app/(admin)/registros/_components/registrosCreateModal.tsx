@@ -70,14 +70,11 @@ export default function CreateRegistroModal({
 
         if (response.status === 200 && data && data.length > 0) {
           const usuarios: Usuario[] = data;
-          const usuario = usuarios[0]; // Suponiendo que solo hay un usuario por documento
-          return [
-            {
-              value: usuario.id,
-              label: `${usuario.nombres} ${usuario.apellidos} Doc:${usuario.dni}`,
-              usuario, // Agregamos el objeto completo para referencia
-            },
-          ];
+          return usuarios.map((usuario) => ({
+            value: usuario.id,
+            label: `${usuario.nombres} ${usuario.apellidos} Doc:${usuario.dni}`,
+            usuario, // Agregamos el objeto completo para referencia
+          }));
         } else {
           console.error(data.message);
           //toast.error(data.mensaje);
