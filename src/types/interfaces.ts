@@ -44,6 +44,7 @@ export interface Registro {
   observaciones: string;
   estado: number;
   usuario:Usuario
+  
 }
 
 export interface Alerta {

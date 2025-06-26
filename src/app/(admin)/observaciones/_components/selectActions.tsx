@@ -3,30 +3,35 @@ import React from "react";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { ChevronDownIcon } from "@/icons";
 import toast from "react-hot-toast";
+import { Observacion } from "@/types/interfaces";
 
 interface SelectActionsProps {
-  observacionId: number;
+  observacion: Observacion;
   recarga: boolean;
   setRecarga: React.Dispatch<React.SetStateAction<boolean>>;
   isActive: boolean;
+  setEditObservacionModalOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  setObservacion?: React.Dispatch<React.SetStateAction<Observacion | null>>;
 }
 
 export default function SelectActions({
-  observacionId,
+  observacion,
   recarga,
   setRecarga,
   isActive,
+  setEditObservacionModalOpen,
+  setObservacion,
 }: SelectActionsProps) {
   const handleAction = async (action: string) => {
     if (action === "Eliminar") {
       if (!isActive) {
         toast.error("No se puede eliminar una observación inactiva");
       } else {
-        await deleteUser(observacionId);
+        await deleteUser(observacion.id);
       }
     } else if (action === "Editar") {
-      // Handle edit action here
-      console.log("Edit observación with ID:", observacionId);
+      setEditObservacionModalOpen?.(true);
+      setObservacion?.(observacion);
     }
   };
 

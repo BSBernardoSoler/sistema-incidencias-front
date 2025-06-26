@@ -18,9 +18,11 @@ import SelectActions from "./selectActions";
 interface TableObservacionesProps {
   observaciones: Observacion[];
   recarga: boolean;
-  setRecarga: React.Dispatch<React.SetStateAction<boolean>>;    
+  setRecarga: React.Dispatch<React.SetStateAction<boolean>>; 
+  setEditObservacionModalOpen?: React.Dispatch<React.SetStateAction<boolean>>;  
+  setObservacion?: React.Dispatch<React.SetStateAction<Observacion | null>>; 
 }
-export default function TableObservaciones({ observaciones, recarga, setRecarga }: TableObservacionesProps) {
+export default function TableObservaciones({ observaciones, recarga, setRecarga, setEditObservacionModalOpen, setObservacion }: TableObservacionesProps) {
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="max-w-full overflow-x-auto">
@@ -96,34 +98,48 @@ export default function TableObservaciones({ observaciones, recarga, setRecarga 
                       size="sm"
                       color={
                         obs.estado === 1
-                          ? "success"
+                          ? "error"
                           : obs.estado === 2
                           ? "warning"
-                          : "error"
+                          : "success"
                       }
                     >
                       {obs.estado === 1
-                        ? "Atendida"
-                        : obs.estado === 0
                         ? "Pendiente"
-                        : "Desconocido"}
+                        : obs.estado === 2
+                        ? "En Proceso"
+                        : "Resuelto"}
                     </Badge>
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                    {obs.fecha_observacion}
+                    {obs.fecha_observacion
+                      ? new Date(obs.fecha_observacion).toLocaleDateString("es-ES", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      })
+                      : "-"}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                     {obs.respuesta_digitador || "-"}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                    {obs.fecha_respuesta || "-"}
+                    {obs.fecha_respuesta
+                      ? new Date(obs.fecha_respuesta).toLocaleDateString("es-ES", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        })
+                      : "-"}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                     <SelectActions
-                      observacionId={obs.id}
+                      observacion={obs}
                       recarga={recarga}
-                      isActive={obs.estado === 1}
+                      isActive={obs.estado !== 0}
                       setRecarga={setRecarga}
+                      setEditObservacionModalOpen={setEditObservacionModalOpen}
+                      setObservacion={setObservacion}
                     />
                   </TableCell>
                 </TableRow>

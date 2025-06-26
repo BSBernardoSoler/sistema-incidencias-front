@@ -8,10 +8,14 @@ import { Button } from '@headlessui/react';
 import React, { useEffect, useState } from 'react'
 import TableObservaciones from './_components/observacionesTable';
 import SearchComponent from './_components/searchComponent';
+import CreateObservacionModal from './_components/ObservacionCreateModal';
+import ObservacionEditModal from './_components/ObservacionEditModal';
 
 export default function Observaciones() {
   const [observaciones, setObservaciones] = useState<Observacion[]>([]);
   const [createObservacionModalOpen, setCreateObservacionModalOpen] = useState<boolean>(false);
+  const [observacion, setObservacion] = useState<Observacion | null>(null);
+  const [EditObservacionModalOpen, setEditObservacionModalOpen] = useState<boolean>(false);
   const [recarga, setRecarga] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -60,7 +64,19 @@ useEffect(() => {
 
       <div className="space-y-6">
         <ComponentCard title="Observaciones">
-          {/* <CreateUserModal users={users} isOpen={createUserModalOpen} recarga={recarga} setRecarga={setRecarga} onClose={() => setCreateUserModalOpen(false)} /> */}
+          <CreateObservacionModal
+            isOpen={createObservacionModalOpen}
+            onClose={() => setCreateObservacionModalOpen(false)}
+            recarga={recarga}
+            setRecarga={setRecarga}
+          />
+          <ObservacionEditModal
+            isOpen={EditObservacionModalOpen}
+            onClose={() => setEditObservacionModalOpen(false)}
+            recarga={recarga}
+            setRecarga={setRecarga}
+            observacion={observacion}
+          />
           <div className="flex justify-between items-center mb-4">
             <SearchComponent observaciones={observaciones} setObservaciones={setObservaciones} />
             <Button
@@ -70,7 +86,7 @@ useEffect(() => {
               Nueva Observación
             </Button>
           </div>
-          <TableObservaciones observaciones={observaciones} recarga={recarga} setRecarga={setRecarga} />
+          <TableObservaciones observaciones={observaciones} recarga={recarga} setRecarga={setRecarga} setObservacion={setObservacion} setEditObservacionModalOpen={setEditObservacionModalOpen} />
                {/* Controles de paginación */}
             <div className="flex justify-center items-center gap-4 mt-4">
               <button
