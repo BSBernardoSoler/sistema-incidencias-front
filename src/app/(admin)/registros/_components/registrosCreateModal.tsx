@@ -58,7 +58,7 @@ export default function CreateRegistroModal({
 
     // Función para buscar usuario por documento
   const handleBuscarUsuario = async (documento: string) => {
-    if (documento.length >= 8 && documento.length <= 11) {
+    if (documento.length >= 3 && documento.length <= 11) {
       try {
         const response = await fetch(
           `/api/usuarios/show?dni=${documento}`,

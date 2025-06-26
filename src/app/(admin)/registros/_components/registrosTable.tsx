@@ -31,6 +31,12 @@ export default function TableRegistros({ registros, recarga, setRecarga, setEdit
             {/* Table Header */}
             <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
               <TableRow>
+                   <TableCell
+                  isHeader
+                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                >
+                  Registro id
+                </TableCell>
                 <TableCell
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
@@ -92,6 +98,9 @@ export default function TableRegistros({ registros, recarga, setRecarga, setEdit
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
               {registros.map((registro) => (
                 <TableRow key={registro.id}>
+                     <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                    {registro.id}
+                  </TableCell>
                   <TableCell className="px-5 py-4 sm:px-6 text-start">
                     <div className="flex items-center gap-3">
                       <div>
