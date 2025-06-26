@@ -75,7 +75,6 @@ export default function NotificationDropdown() {
           ) : (
             alertas
               .slice()
-              .reverse()
               .map((alerta) => (
                 <li key={alerta.id}>
                   <DropdownItem
