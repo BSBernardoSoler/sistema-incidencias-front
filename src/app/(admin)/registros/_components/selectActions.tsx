@@ -41,13 +41,13 @@ export default function SelectActions({
     const res = await fetch(`/api/registros?id=${registroId}`, {
       method: "DELETE",
     });
+      const errorData = await res.json();
 
     if (!res.ok) {
-      const errorData = await res.json();
-      toast.error(errorData.message || "Error deleting registro");
+      toast.error(errorData.message || "Error al eliminar registro");
       return;
     } else {
-      toast.success("Registro deleted successfully");
+      toast.success(errorData.message || "Registro eliminado correctamente");
       setRecarga(!recarga);
     }
   };

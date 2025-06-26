@@ -80,3 +80,34 @@ export async function PUT(request: Request) {
 
   return NextResponse.json(data);
 }
+
+
+export async function DELETE(request: Request) {
+  const newUrl = new URL(request.url);
+  const id = newUrl.searchParams.get('id');
+  if (!id) {
+    return NextResponse.json(
+      { message: 'ID de registro es requerido' },
+      { status: 400 }
+    );
+  }
+  const res = await fetchWithAuth(
+    `${envs.backend}/registros/${id}`,
+    {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+  const data = await res.json();
+
+  if (!res.ok) {
+    return NextResponse.json(
+      { message: data.message || 'Error al eliminar registro' },
+      { status: 500 }
+    );
+  }
+
+  return NextResponse.json(data);
+}
