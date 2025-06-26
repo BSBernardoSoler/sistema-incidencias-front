@@ -101,7 +101,11 @@ export default function TableHistorial({ historial, recarga, setRecarga }: Table
                     {item.valor_nuevo}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                    {new Date(item.fecha_modificacion).toLocaleString()}
+                    {new Date(item.fecha_modificacion).toLocaleDateString("es-ES", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric"
+                    })}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                     <Badge

@@ -105,7 +105,11 @@ export default function TableRegistros({ registros, recarga, setRecarga, setEdit
                     </div>
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {registro.fecha_digitacion}
+                    {new Date(registro.fecha_digitacion).toLocaleDateString("es-ES", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                     {registro.cantidad_registros}

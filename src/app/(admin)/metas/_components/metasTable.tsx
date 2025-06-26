@@ -103,7 +103,11 @@ export default function TableMetas({ metas, recarga, setRecarga, setEditMetaModa
                     {meta.meta_mensual}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {meta.fecha_registro}
+                    {new Date(meta.fecha_registro).toLocaleDateString("es-ES", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                     <Badge
