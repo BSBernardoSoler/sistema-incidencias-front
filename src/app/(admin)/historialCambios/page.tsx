@@ -3,7 +3,7 @@ import ComponentCard from '@/components/common/ComponentCard'
 import PageBreadcrumb from '@/components/common/PageBreadCrumb'
 import VerificadorSesion from '@/components/provider/verificadorSesion'
 import React, { useEffect, useState } from 'react'
-import CreateHistorialModal from './_components/UsersCreateModal'
+import CreateHistorialModal from './_components/CambiosCreateModal'
 import { Button } from '@headlessui/react'
 import TableHistorial from './_components/historialTable'
 import Loader from '@/components/common/loader'
@@ -61,7 +61,7 @@ export default function HistorialPage() {
 
       <div className="space-y-6">
         <ComponentCard title="Historial de cambios">
-          <CreateHistorialModal historial={historial} isOpen={createHistorialModalOpen} recarga={recarga} setRecarga={setRecarga} onClose={() => setCreateHistorialModalOpen(false)} />
+          <CreateHistorialModal  isOpen={createHistorialModalOpen} recarga={recarga} setRecarga={setRecarga} onClose={() => setCreateHistorialModalOpen(false)} />
           <div className="flex justify-between items-center mb-4">
            {/* <SearchComponent historial={historial} setHistorial={setHistorial} /> */}
             <Button
