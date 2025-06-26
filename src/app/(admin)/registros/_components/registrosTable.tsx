@@ -18,9 +18,11 @@ import SelectActions from "./selectActions";
 interface TableRegistrosProps {
   registros: RegistroDetalle[];
   recarga: boolean;
-  setRecarga: React.Dispatch<React.SetStateAction<boolean>>;    
+  setRecarga: React.Dispatch<React.SetStateAction<boolean>>;
+  setEditRegistroModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedRegistro: React.Dispatch<React.SetStateAction<RegistroDetalle | null>>;    
 }
-export default function TableRegistros({ registros, recarga, setRecarga }: TableRegistrosProps) {
+export default function TableRegistros({ registros, recarga, setRecarga, setEditRegistroModalOpen, setSelectedRegistro }: TableRegistrosProps) {
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="max-w-full overflow-x-auto">
@@ -139,7 +141,7 @@ export default function TableRegistros({ registros, recarga, setRecarga }: Table
                     </Badge>
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                    <SelectActions registroId={registro.id} recarga={recarga} isActive={registro.estado === 1} setRecarga={setRecarga} />
+                    <SelectActions registroId={registro.id} recarga={recarga} isActive={registro.estado === 1} setRecarga={setRecarga} setEditRegistroModalOpen={setEditRegistroModalOpen} setSelectedRegistro={setSelectedRegistro} registro={registro} />
                   </TableCell>
                 </TableRow>
               ))}

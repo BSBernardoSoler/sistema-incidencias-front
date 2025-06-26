@@ -3,12 +3,16 @@ import React from "react";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { ChevronDownIcon } from "@/icons";
 import toast from "react-hot-toast";
+import { RegistroDetalle } from "@/types/interfaces";
 
 interface SelectActionsProps {
   registroId: number;
   recarga: boolean;
+  registro: RegistroDetalle | null;
   setRecarga: React.Dispatch<React.SetStateAction<boolean>>;
   isActive: boolean;
+  setEditRegistroModalOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedRegistro?: React.Dispatch<React.SetStateAction<RegistroDetalle | null>>;
 }
 
 export default function SelectActions({
@@ -16,6 +20,9 @@ export default function SelectActions({
   recarga,
   setRecarga,
   isActive,
+  registro,
+  setEditRegistroModalOpen,
+  setSelectedRegistro,
 }: SelectActionsProps) {
   const handleAction = async (action: string) => {
     if (action === "Eliminar") {
@@ -25,8 +32,8 @@ export default function SelectActions({
         await deleteUser(registroId);
       }
     } else if (action === "Editar") {
-      // Handle edit action here
-      console.log("Edit user with ID:", registroId);
+      setEditRegistroModalOpen?.(true);
+      setSelectedRegistro?.(registro);
     }
   };
 

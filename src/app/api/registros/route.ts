@@ -47,3 +47,36 @@ export async function POST(request: Request) {
 
   return NextResponse.json(data);
 }
+
+
+export async function PUT(request: Request) {
+  const body = await request.json();
+  const id = body.id;
+  if (!id) {
+    return NextResponse.json(
+      { message: 'ID de registro es requerido' },
+      { status: 400 }
+    );
+  }
+  delete body.id; // Eliminar el ID del cuerpo para evitar conflictos
+  const res = await fetchWithAuth(
+    `${envs.backend}/registros/${id}`,
+    {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+  const data = await res.json();
+
+  if (!res.ok) {
+    return NextResponse.json(
+      { message: data.message || 'Error al crear registro' },
+      { status: 500 }
+    );
+  }
+
+  return NextResponse.json(data);
+}

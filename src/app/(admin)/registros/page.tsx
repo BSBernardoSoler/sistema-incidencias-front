@@ -9,11 +9,15 @@ import React, { useEffect, useState } from 'react'
 import TableRegistros from './_components/registrosTable';
 import SearchComponent from './_components/searchComponet';
 import CreateRegistroModal from './_components/registrosCreateModal';
+import EditRegistroModal from './_components/registrosEditModal';
 
 export default function Registros() {
 
   const [registros, setRegistros] = useState<RegistroDetalle[]>([]);
   const [createRegistroModalOpen, setCreateRegistroModalOpen] = useState<boolean>(false);
+  const [editRegistroModalOpen, setEditRegistroModalOpen] = useState<boolean>(false);
+  const [selectedRegistro, setSelectedRegistro] = useState<RegistroDetalle | null>(null);
+  // Estado para recargar los registros
   const [recarga, setRecarga] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -68,6 +72,7 @@ useEffect(() => {
       <div className="space-y-6">
         <ComponentCard title="Registros">
           <CreateRegistroModal isOpen={createRegistroModalOpen} recarga={recarga} setRecarga={setRecarga} onClose={() => setCreateRegistroModalOpen(false)} users={[]} />
+           <EditRegistroModal isOpen={editRegistroModalOpen} onClose={() => setEditRegistroModalOpen(false)} registro={selectedRegistro} recarga={recarga} setRecarga={setRecarga} users={[]} />
           <div className="flex justify-between items-center mb-4">
             <SearchComponent registros={registros} setRegistros={setRegistros} />
             <Button
@@ -77,7 +82,7 @@ useEffect(() => {
               Nuevo Registro
             </Button>
           </div>
-          <TableRegistros registros={registros} recarga={recarga} setRecarga={setRecarga} />
+          <TableRegistros registros={registros} recarga={recarga} setRecarga={setRecarga} setEditRegistroModalOpen={setEditRegistroModalOpen} setSelectedRegistro={setSelectedRegistro} />
             {/* Controles de paginación */}
             <div className="flex justify-center items-center gap-4 mt-4">
               <button

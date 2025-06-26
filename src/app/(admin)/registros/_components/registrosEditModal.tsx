@@ -3,95 +3,153 @@ import React, { useState, useEffect } from 'react';
 import Label from '../../../../components/form/Label';
 import Input from '../../../../components/form/input/InputField';
 import Select from '../../../../components/form/Select';
-import { ChevronDownIcon, EyeCloseIcon, EyeIcon } from '../../../../icons';
-import { User } from '@/types/interfaces';
+import { ChevronDownIcon } from '../../../../icons';
+import { User, Usuario, Registro, RegistroDetalle } from '@/types/interfaces';
 import toast from 'react-hot-toast';
 import Button from '@/components/ui/button/Button';
+import dynamic from 'next/dynamic';
+const AsyncSelect = dynamic(() => import("react-select/async"), { ssr: false });
 
-interface CreateUserModalProps {
+interface EditRegistroModalProps {
   users: User[];
   isOpen: boolean;
   onClose: () => void;
   recarga: boolean;
   setRecarga: React.Dispatch<React.SetStateAction<boolean>>;
+  registro: RegistroDetalle | null; // El registro a editar
 }
 
 interface Option {
   value: string;
   label: string;
+  usuario?: Usuario;
 }
 
-export default function EditUserModal({
+export default function EditRegistroModal({
   users,
   isOpen,
   onClose,
   recarga,
   setRecarga,
-}: CreateUserModalProps) {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [dni, setDni] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [selectedRole, setSelectedRole] = useState<Option | null>(null);
+  registro,
+}: EditRegistroModalProps) {
+  const [usuarioId, setUsuarioId] = useState<Option | null>(null);
+  const [fechaDigitacion, setFechaDigitacion] = useState('');
+  const [cantidadRegistros, setCantidadRegistros] = useState('');
+  const [horaInicio, setHoraInicio] = useState('');
+  const [horaFin, setHoraFin] = useState('');
+  const [estadoValidacion, setEstadoValidacion] = useState('');
+  const [observaciones, setObservaciones] = useState('');
+  const [lote, setLote] = useState('');
 
-  const options: Option[] = [
-    { value: '1', label: 'digitador' },
-    { value: '2', label: 'admin' },
-    { value: '3', label: 'doctor' },
-  ];
+  // Inicializar los campos cuando cambia el registro
+  useEffect(() => {
+    if (registro) {
+      setFechaDigitacion(registro.fecha_digitacion || '');
+      setCantidadRegistros(registro.cantidad_registros?.toString() || '');
+      setHoraInicio(registro.hora_inicio || '');
+      setHoraFin(registro.hora_fin || '');
+      setEstadoValidacion(registro.estado_validacion || '');
+      setObservaciones(registro.observaciones || '');
+      setLote(registro.lote || '');
+    } else {
+      setFechaDigitacion('');
+      setCantidadRegistros('');
+      setHoraInicio('');
+      setHoraFin('');
+      setEstadoValidacion('');
+      setObservaciones('');
+      setLote('');
+    }
+  }, [registro]);
 
-  const createUser = async () => {
-    if (
-      !firstName.trim() ||
-      !lastName.trim() ||
-      !dni.trim() ||
-      !email.trim() ||
-      !password.trim() ||
-      !selectedRole
-    ) {
-      toast.error('Todos los campos son obligatorios');
+  const userOptions: Option[] = users.map((u) => ({
+    value: u.id.toString(),
+    label: `${u.nombres} ${u.apellidos}`,
+  }));
+
+  // Función para cargar opciones  de clientes
+  const loadOptions = async (inputValue: string) => {
+    return await handleBuscarUsuario(inputValue);
+  };
+
+  // Función para buscar usuario por documento
+  const handleBuscarUsuario = async (documento: string) => {
+    if (documento.length >= 8 && documento.length <= 11) {
+      try {
+        const response = await fetch(
+          `/api/usuarios/show?dni=${documento}`,
+          {
+            method: "GET",
+          }
+        );
+        const data = await response.json();
+
+        if (response.status === 200 && data && data.length > 0) {
+          const usuarios: Usuario[] = data;
+          const usuario = usuarios[0];
+          return [
+            {
+              value: usuario.id,
+              label: `${usuario.nombres} ${usuario.apellidos} Doc:${usuario.dni}`,
+              usuario,
+            },
+          ];
+        } else {
+          return [];
+        }
+      } catch (error) {
+        return [];
+      }
+    }
+    return [];
+  };
+
+
+
+  const updateRegistro = async () => {
+    if (!registro) return;
+    const camposFaltantes: string[] = [];
+    if (!fechaDigitacion) camposFaltantes.push('Fecha de digitación');
+    if (!cantidadRegistros) camposFaltantes.push('Cantidad de registros');
+    if (!horaInicio.trim()) camposFaltantes.push('Hora de inicio');
+    if (!horaFin.trim()) camposFaltantes.push('Hora de fin');
+    if (!lote.trim()) camposFaltantes.push('Lote');
+
+    if (camposFaltantes.length > 0) {
+      toast.error(`Faltan los siguientes campos obligatorios: ${camposFaltantes.join(', ')}`);
       return;
     }
 
-    const userData = {
-      nombres: firstName,
-      apellidos: lastName,
-      dni,
-      correo: email,
-      estado: 1,
-      password,
-      rol_id: Number(selectedRole.value),
+    const registroData = {
+      id: registro.id,
+      fecha_digitacion: fechaDigitacion,
+      cantidad_registros: Number(cantidadRegistros),
+      hora_inicio: horaInicio,
+      hora_fin: horaFin,
+      estado_validacion: 'Validado',
+      lote: lote,
+      observaciones: observaciones || undefined,
     };
 
     try {
-      const response = await fetch('/api/usuarios', {
-        method: 'POST',
+      const response = await fetch(`/api/registros`, {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userData),
+        body: JSON.stringify(registroData),
       });
+      const data = await response.json();
+      if (!response.ok) toast.error(data.message || 'Error al actualizar registro');
 
-      if (!response.ok) throw new Error('Error creando usuario');
-
-      toast.success('Usuario creado correctamente');
-      setRecarga(!recarga);
-      setFirstName('');
-      setLastName('');
-      setDni('');
-      setEmail('');
-      setPassword('');
-      setSelectedRole(null);
-      onClose();
+      if (response.status === 200) {
+        toast.success('Registro actualizado correctamente');
+        setRecarga(!recarga);
+        onClose();
+      }
     } catch (error) {
-      toast.error('Error al crear usuario');
-      console.error('Error al crear usuario:', error);
+      toast.error('Error al actualizar registro');
+      console.error('Error al actualizar registro:', error);
     }
-  };
-
-  const handleSelectChange = (value: string) => {
-    const selected = options.find((option) => option.value === value) || null;
-    setSelectedRole(selected);
   };
 
   useEffect(() => {
@@ -112,7 +170,7 @@ export default function EditUserModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="w-full max-w-xl p-6 bg-white rounded-lg shadow-lg dark:bg-dark-900 max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">Crear Usuario</h2>
+          <h2 className="text-xl font-semibold">Editar Registro</h2>
           <button
             onClick={onClose}
             className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
@@ -123,86 +181,67 @@ export default function EditUserModal({
 
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
+  
             <div>
-              <Label>Nombres</Label>
+              <Label>Fecha de digitación</Label>
               <Input
-                type="text"
-                placeholder="Ingrese nombres"
+                type="date"
                 className="py-1.5 text-sm"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
+                value={fechaDigitacion}
+                onChange={(e) => setFechaDigitacion(e.target.value)}
               />
             </div>
             <div>
-              <Label>Apellidos</Label>
+              <Label>Cantidad de registros</Label>
               <Input
-                type="text"
-                placeholder="Ingrese apellidos"
+                type="number"
                 className="py-1.5 text-sm"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
+                value={cantidadRegistros}
+                onChange={(e) => setCantidadRegistros(e.target.value)}
               />
             </div>
             <div>
-              <Label>DNI</Label>
+              <Label>Lote</Label>
               <Input
                 type="text"
-                placeholder="Ingrese DNI"
+                placeholder="Ingrese lote"
                 className="py-1.5 text-sm"
-                value={dni}
-                onChange={(e) => setDni(e.target.value)}
+                value={lote}
+                onChange={(e) => setLote(e.target.value)}
               />
-            </div>
-            <div>
-              <Label>Rol</Label>
-              <div className="relative">
-                <Select
-                  options={options}
-                  placeholder="Seleccione un rol"
-                  onChange={handleSelectChange}
-                  className="dark:bg-dark-900 text-sm"
-                />
-                <span className="absolute text-gray-500 -translate-y-1/2 pointer-events-none right-3 top-1/2 dark:text-gray-400">
-                  <ChevronDownIcon />
-                </span>
-              </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-4">
+          <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label>Email</Label>
+              <Label>Hora inicio</Label>
               <Input
-                type="email"
-                placeholder="Ingrese email"
+                type="time"
                 className="py-1.5 text-sm"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={horaInicio}
+                onChange={(e) => setHoraInicio(e.target.value)}
               />
             </div>
-
             <div>
-              <Label>Contraseña</Label>
-              <div className="relative">
-                <Input
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="Ingrese contraseña"
-                  className="py-1.5 text-sm"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <button
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
-                >
-                  {showPassword ? (
-                    <EyeIcon className="fill-gray-500 dark:fill-gray-400" />
-                  ) : (
-                    <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400" />
-                  )}
-                </button>
-              </div>
+              <Label>Hora fin</Label>
+              <Input
+                type="time"
+                className="py-1.5 text-sm"
+                value={horaFin}
+                onChange={(e) => setHoraFin(e.target.value)}
+              />
             </div>
+          </div>
+
+          <div>
+            <Label>Observaciones (opcional)</Label>
+            <Input
+              type="text"
+              placeholder="Ingrese observaciones"
+              className="py-1.5 text-sm"
+              value={observaciones}
+              onChange={(e) => setObservaciones(e.target.value)}
+            />
           </div>
 
           <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-gray-700">
@@ -214,9 +253,9 @@ export default function EditUserModal({
             </Button>
             <Button
               className="px-4 py-1.5 text-sm text-white bg-blue-600 rounded-md hover:bg-blue-700"
-              onClick={createUser}
+              onClick={updateRegistro}
             >
-              Crear Usuario
+              Actualizar Registro
             </Button>
           </div>
         </div>

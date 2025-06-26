@@ -38,10 +38,12 @@ export interface Registro {
   fecha_digitacion: string; // o Date, si vas a parsearla
   cantidad_registros: number;
   hora_inicio: string;
+  lote :string
   hora_fin: string;
   estado_validacion: string;
   observaciones: string;
   estado: number;
+  usuario:Usuario
 }
 
 export interface Alerta {
@@ -96,6 +98,7 @@ export interface RegistroDetalle {
   hora_fin: string;
   estado_validacion: string;
   observaciones: string;
+  lote: string;
   estado: number;
   observacionesList: Array<Omit<Observacion, 'registro' | 'usuarioReporta'>>;
   cambios: Array<Omit<Historial, 'registro' | 'usuarioModifica'>>;
