@@ -25,12 +25,20 @@ export default function SignInForm() {
         return;
       }
       try {
-         await signIn("credentials", {
-          redirect: true,
+
+         const result = await signIn("credentials", {
+          redirect: false,
           email,
           password,
-          callbackUrl: "/",
+          //callbackUrl: "/",
         });
+        if(result?.ok && result?.status === 200){
+          router.push("/")
+
+        }else{
+          result?.error && toast.error(result.error);
+        }
+
       
       } catch (error) {
         toast.error("Error al iniciar sesión");
