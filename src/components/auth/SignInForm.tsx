@@ -4,6 +4,7 @@ import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
 import Button from "@/components/ui/button/Button";
 import { EyeCloseIcon, EyeIcon } from "@/icons";
+import { tr } from "date-fns/locale";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -30,11 +31,16 @@ export default function SignInForm() {
           redirect: false,
           email,
           password,
+        });
+        if(result?.ok ){
+          toast.success("Inicio de sesión exitoso");
+          await signIn("credentials", {
+          redirect: true,
+          email,
+          password,
           callbackUrl: "/",
         });
-        if(result?.status === 200){
-          router.push(`${result?.url || "/"}`);
-          toast.success("Inicio de sesión exitoso");
+          
 
         }else{
           result?.error && toast.error(result.error);
@@ -59,14 +65,20 @@ export default function SignInForm() {
             </p>
           </div>
           <div>
-      
-      
-            
-              <div className="space-y-6">
-                <div>
-                  <Label>
-                    Email <span className="text-error-500">*</span>{" "}
-                  </Label>
+
+
+              <form
+                action=""
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSubmit();
+                }}
+              >
+                <div className="space-y-6">
+                  <div>
+                    <Label>
+                      Email <span className="text-error-500">*</span>{" "}
+                    </Label>
                   <Input placeholder="info@gmail.com" type="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
                 </div>
                 <div>
@@ -94,20 +106,18 @@ export default function SignInForm() {
                 </div>
           
                 <div>
-                  <Button className="w-full" size="sm"
-                  onClick={()=>{
-                    handleSubmit();
-                  }}
+                  <Button
+                  className="w-full"
+                  size="sm"
+                  type="submit"
                   disabled={!email || !password}
                   >
-                  
-                    Iniciar sesión
+                  Iniciar sesión
                   </Button>
                 </div>
               </div>
-            
 
-          
+            </form>
           </div>
         </div>
       </div>
