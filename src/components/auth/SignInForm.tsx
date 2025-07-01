@@ -92,20 +92,7 @@ export default function SignInForm() {
                     </span>
                   </div>
                 </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Checkbox checked={isChecked} onChange={setIsChecked} />
-                    <span className="block font-normal text-gray-700 text-theme-sm dark:text-gray-400">
-                      Recuérdame?
-                    </span>
-                  </div>
-                  <Link
-                    href="/reset-password"
-                    className="text-sm text-brand-500 hover:text-brand-600 dark:text-brand-400"
-                  >
-                    Contraseña olvidada?
-                  </Link>
-                </div>
+          
                 <div>
                   <Button className="w-full" size="sm"
                   onClick={()=>{
@@ -120,17 +107,7 @@ export default function SignInForm() {
               </div>
             
 
-            <div className="mt-5">
-              <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
-                ¿No tienes una cuenta? {""}
-                <Link
-                  href="/signup"
-                  className="text-brand-500 hover:text-brand-600 dark:text-brand-400"
-                >
-                  Registrarse
-                </Link>
-              </p>
-            </div>
+          
           </div>
         </div>
       </div>
