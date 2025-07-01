@@ -223,7 +223,7 @@ export default function CreateMetasModal({
               />
             </div>
             <div>
-              <Label>Meta Mensual</Label>
+              <Label>Meta Quincenal</Label>
               <Input
                 type="text"
                 placeholder="Ingrese meta mensual"

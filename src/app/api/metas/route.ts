@@ -40,6 +40,14 @@ export async function POST(request: Request) {
 
 
   const data = await res.json();
+
+
+  if (!res.ok) {
+    return NextResponse.json(
+      { message: data.message || 'Error al crear meta' },
+      { status: 500 }
+    );
+  }
   return NextResponse.json(data);
 }
 

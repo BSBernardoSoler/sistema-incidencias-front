@@ -24,23 +24,31 @@ export default function Usuarios() {
     const [totalPages, setTotalPages] = useState(1);
 
 useEffect(() => {
-  async function getUser(){
+  let isMounted = true;
+  async function getUser() {
     setLoading(true);
     const res = await fetch(`/api/usuarios?page=${page}&limit=${limit}`);
     const data = await res.json();
-    
-    setUsers(data.data);
 
-    // Asumiendo que el API devuelve total como data.total
+    if (isMounted) {
+      if (data.data && data.data.length > 0) {
+        setUsers(data.data);
+      } else {
+        // Si no hay datos en la nueva página, vuelve a la anterior
+        if (page > 1) setPage((prev) => prev - 1);
+      }
+
       if (data.total) {
         setTotalPages(Math.ceil(data.total / limit));
       }
-
-    setLoading(false);
+      setLoading(false);
+    }
   }
   getUser();
-
-}, [recarga,page]);
+  return () => {
+    isMounted = false;
+  };
+}, [recarga, page]);
 
 
   const handleNext = () => {
