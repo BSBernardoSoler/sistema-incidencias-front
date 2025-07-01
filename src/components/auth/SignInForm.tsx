@@ -30,10 +30,11 @@ export default function SignInForm() {
           redirect: false,
           email,
           password,
-          //callbackUrl: "/",
+          callbackUrl: "/",
         });
-        if(result?.ok && result?.status === 200){
-          router.push("/")
+        if(result?.status === 200){
+          router.push(`${result?.url || "/"}`);
+          toast.success("Inicio de sesión exitoso");
 
         }else{
           result?.error && toast.error(result.error);
