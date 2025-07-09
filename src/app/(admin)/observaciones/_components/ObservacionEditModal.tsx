@@ -113,15 +113,30 @@ export default function ObservacionEditModal({
       toast.error(`Faltan los siguientes campos obligatorios: ${camposFaltantes.join(', ')}`);
       return;
     }
+    let observacionData={}
 
-    const observacionData = {
+   if(respuestaDigitador !== ''){
+     observacionData = {
       id: Number(observacion.id),
       estado: estadoValidacion,
       registro_id: Number(registroReporta?.id),
       detalle_observacion: detalleObservacion,
       respuesta_digitador: respuestaDigitador || undefined,
+      fecha_respuesta: new Date().toISOString(), // Actualizamos la fecha de respuesta
+
       // No actualizamos fecha_observacion aquí
     };
+   }else{
+       observacionData = {
+      id: Number(observacion.id),
+      estado: estadoValidacion,
+      registro_id: Number(registroReporta?.id),
+      detalle_observacion: detalleObservacion,
+      respuesta_digitador: respuestaDigitador || undefined,
+
+      // No actualizamos fecha_observacion aquí
+    };
+   }
 
     try {
       const response = await fetch(`/api/observaciones`, {
