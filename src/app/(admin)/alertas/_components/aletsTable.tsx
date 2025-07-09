@@ -48,18 +48,7 @@ export default function TableAlertas({ alertas, recarga, setRecarga }: TableAler
                                 >
                                     Fecha Generada
                                 </TableCell>
-                                <TableCell
-                                    isHeader
-                                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                                >
-                                    Estado
-                                </TableCell>
-                                <TableCell
-                                    isHeader
-                                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                                >
-                                    Resuelta
-                                </TableCell>
+                            
                                 <TableCell
                                     isHeader
                                     className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
@@ -91,32 +80,7 @@ export default function TableAlertas({ alertas, recarga, setRecarga }: TableAler
                                     <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                                         {new Date(alerta.fecha_generada).toLocaleDateString()}
                                     </TableCell>
-                                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                        <Badge
-                                            size="sm"
-                                            color={
-                                                alerta.estado === 1
-                                                    ? "success"
-                                                    : alerta.estado === 2
-                                                    ? "warning"
-                                                    : "error"
-                                            }
-                                        >
-                                            {alerta.estado === 1
-                                                ? "Activa"
-                                                : alerta.estado === 0
-                                                ? "Inactiva"
-                                                : "Desconocido"}
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                                        <Badge
-                                            size="sm"
-                                            color={alerta.resuelta ? "success" : "error"}
-                                        >
-                                            {alerta.resuelta ? "Sí" : "No"}
-                                        </Badge>
-                                    </TableCell>
+                          
                                     <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                                         <SelectActions alertaId={alerta.id} recarga={recarga} isActive={alerta.estado === 1} setRecarga={setRecarga} />
                                     </TableCell>

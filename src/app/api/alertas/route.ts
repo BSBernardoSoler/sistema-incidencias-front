@@ -21,3 +21,26 @@ export async function GET(request: Request) {
 
   return NextResponse.json(data);
 }
+
+
+export async function DELETE(request: Request) {
+  const newUrl = new URL(request.url);
+  const id = newUrl.searchParams.get('id');
+  const res = await fetchWithAuth(
+    `${envs.backend}/alertas/${id}`,
+    { method: 'DELETE' }
+  );
+    const data = await res.json();
+
+  if (!res.ok) {
+    return NextResponse.json(
+      { message: data.message || 'Error al obtener alertas' },
+      { status: 500 }
+    );
+  }
+
+  return NextResponse.json(data);
+}
+
+
+

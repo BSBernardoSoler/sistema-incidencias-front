@@ -31,7 +31,7 @@ export default function SelectActions({
   };
 
   const deleteUser = async (userId: number) => {
-    const res = await fetch(`/api/usuarios?id=${userId}`, {
+    const res = await fetch(`/api/alertas?id=${userId}`, {
       method: "DELETE",
     });
 
@@ -53,18 +53,7 @@ export default function SelectActions({
       </MenuButton>
       <MenuItems className="absolute right-0 z-10 mt-2 w-36 origin-top-right bg-white dark:bg-dark-900 border border-gray-200 dark:border-dark-800 rounded-md shadow-lg focus:outline-none">
         <div className="py-1">
-          <MenuItem>
-            {({ active }) => (
-              <button
-                onClick={() => handleAction("Editar")}
-                className={`${
-                  active ? "bg-gray-100 dark:bg-dark-800" : ""
-                } block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200`}
-              >
-                Editar
-              </button>
-            )}
-          </MenuItem>
+   
           <MenuItem>
             {({ active }) => (
               <button
