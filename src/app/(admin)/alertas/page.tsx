@@ -62,7 +62,7 @@ export default function Alertas() {
   }
 
   return (
-    <VerificadorSesion rolesPermitidos={['admin']}>
+    <VerificadorSesion rolesPermitidos={['admin', 'doctor', 'digitador']}>
       <div>
         <PageBreadcrumb pageTitle="Alertas" />
         <div className="space-y-6">

@@ -58,7 +58,7 @@ useEffect(() => {
     );
   }
   return (
-     <VerificadorSesion rolesPermitidos={['admin']}> 
+     <VerificadorSesion rolesPermitidos={['admin', 'digitador', 'doctor']}>
     <div>
       <PageBreadcrumb pageTitle="Observaciones" />
 

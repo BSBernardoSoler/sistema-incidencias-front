@@ -53,6 +53,7 @@ const navItems: NavItem[] = [
     icon: <MdAddAlert size={24}/>,
     name: "Alertas",
     path: "/alertas",
+
   },
     {
     icon: <GiStairsGoal size={24}/>,
@@ -78,7 +79,7 @@ const AppSidebar: React.FC = () => {
   ) => (
     <ul className="flex flex-col gap-4">
       {navItems.map((nav, index) => (
-        <li key={nav.name}>
+        <li key={nav.name} >
           {nav.subItems ? (
             <button
               onClick={() => handleSubmenuToggle(index, menuType)}

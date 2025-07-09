@@ -55,7 +55,7 @@ export default function HistorialPage() {
     );
   }
   return (
-   <VerificadorSesion rolesPermitidos={['admin']}> 
+   <VerificadorSesion rolesPermitidos={['admin', 'doctor']}>
     <div>
       <PageBreadcrumb pageTitle="Historial de cambios" />
 
