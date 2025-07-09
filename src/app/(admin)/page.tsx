@@ -33,6 +33,8 @@ export default function Ecommerce() {
       <div className="col-span-12 xl:col-span-5">
           <MonthlySalesChart />
 
+          <MonthlyTarget />
+
            <PdfExport />
       </div>
 

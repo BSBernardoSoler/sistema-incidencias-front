@@ -80,7 +80,7 @@ export default function MonthlySalesChart() {
 
   const series = [
     {
-      name: "Sales",
+      name: "Registros",
       data: chartData,
     },
   ];
