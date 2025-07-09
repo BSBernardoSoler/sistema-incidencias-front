@@ -55,6 +55,12 @@ export default function TableRegistros({ registros, recarga, setRecarga, setEdit
                 >
                   Cantidad registros
                 </TableCell>
+                    <TableCell
+                  isHeader
+                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                >
+                  Lote
+                </TableCell>
                 <TableCell
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
@@ -122,6 +128,9 @@ export default function TableRegistros({ registros, recarga, setRecarga, setEdit
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                     {registro.cantidad_registros}
+                  </TableCell>
+                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                    {registro.lote}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                     {registro.hora_inicio}
