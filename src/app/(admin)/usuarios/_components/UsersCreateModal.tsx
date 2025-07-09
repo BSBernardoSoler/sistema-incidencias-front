@@ -36,6 +36,7 @@ export default function CreateUserModal({
   const [showPassword, setShowPassword] = useState(false);
   const [selectedRole, setSelectedRole] = useState<Option | null>(null);
   const [telefono, setTelefono] = useState('');
+  const [condicionLaboral, setCondicionLaboral] = useState<string>('');
   const options: Option[] = [
     { value: '1', label: 'digitador' },
     { value: '2', label: 'admin' },
@@ -58,11 +59,12 @@ export default function CreateUserModal({
     const userData = {
       nombres: firstName,
       apellidos: lastName,
-      dni,
+      condicionLaboral: condicionLaboral,
+      dni: String(dni),
       correo: email,
       estado: 1,
       password,
-      telefono,
+      telefono: telefono,
       rol_id: Number(selectedRole.value),
     };
 
@@ -86,6 +88,7 @@ export default function CreateUserModal({
         setEmail('');
         setPassword('');
         setTelefono('');
+        setCondicionLaboral('');
         setSelectedRole(null);
         onClose();
       
@@ -158,6 +161,16 @@ export default function CreateUserModal({
                 className="py-1.5 text-sm"
                 value={dni}
                 onChange={(e) => setDni(e.target.value)}
+              />
+            </div>
+               <div>
+              <Label>Condicion laboral</Label>
+              <Input
+                type="text"
+                placeholder="Ingrese condicion laboral"
+                className="py-1.5 text-sm"
+                value={condicionLaboral}
+                onChange={(e) => setCondicionLaboral(e.target.value)}
               />
             </div>
             <div>

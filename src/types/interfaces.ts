@@ -13,6 +13,7 @@ export interface User {
   correo: string;
   telefono?: string;
   estado: number;
+  condicionLaboral?: string;
   fecha_ingreso: string; // o Date, si vas a parsearla
   rol: Rol;
 }

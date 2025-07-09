@@ -7,6 +7,7 @@ import { ChevronDownIcon, EyeCloseIcon, EyeIcon } from '../../../../icons';
 import { User } from '@/types/interfaces';
 import toast from 'react-hot-toast';
 import Button from '@/components/ui/button/Button';
+import { se } from 'date-fns/locale';
 
 interface CreateUserModalProps {
   userEdit: User | null;
@@ -36,6 +37,9 @@ export default function EditUserModal({
    const [showPassword, setShowPassword] = useState(false);
    const [selectedRole, setSelectedRole] = useState<Option | null>(null);
    const [telefono, setTelefono] = useState(userEdit ? userEdit.telefono : '');
+    const [condicionLaboral, setCondicionLaboral] = useState<string>(
+      userEdit ? userEdit.condicionLaboral || '' : ''
+    );
    const options: Option[] = [
      { value: '1', label: 'digitador' },
      { value: '2', label: 'admin' },
@@ -61,6 +65,7 @@ export default function EditUserModal({
        userData = {
       nombres: firstName,
       apellidos: lastName,
+      condicionLaboral,
       dni,
       correo: email,
       telefono,
@@ -72,6 +77,7 @@ export default function EditUserModal({
        userData = {
       nombres: firstName,
       apellidos: lastName,
+      condicionLaboral,
       dni,
       correo: email,
       telefono,
@@ -121,6 +127,7 @@ export default function EditUserModal({
       setDni(userEdit.dni);
       setEmail(userEdit.correo);
       setTelefono(userEdit.telefono || '');
+      setCondicionLaboral(userEdit.condicionLaboral || '');
       setSelectedRole({
         value: String(userEdit.rol.id),
         label: userEdit.rol.nombre,
@@ -185,6 +192,16 @@ export default function EditUserModal({
                 className="py-1.5 text-sm"
                 value={dni}
                 onChange={(e) => setDni(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label>Condicion laboral</Label>
+              <Input
+                type="text"
+                placeholder="Ingrese condicion laboral"
+                className="py-1.5 text-sm"
+                value={condicionLaboral}
+                onChange={(e) => setCondicionLaboral(e.target.value)}
               />
             </div>
             <div>
